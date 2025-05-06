@@ -1,0 +1,25 @@
+# This is a SecretProviderClass example using user-assigned identity to access your key vault
+# Service Connector sets up the Azure resource connection, users only need create the SecretProviderClass and workload resources
+# For the variables to fill in, you may get their values from Service Connector Azure Portal
+
+
+apiVersion: secrets-store.csi.x-k8s.io/v1
+kind: SecretProviderClass
+metadata:
+  name: sc-demo-keyvault-csi
+  namespace: default
+spec:
+  provider: azure
+  parameters:
+    cloudName: AzurePublicCloud
+    usePodIdentity: "false"
+    useVMManagedIdentity: "true"                                     # Set to true for using managed identity
+    userAssignedIdentityID: "a754b4a0-d934-4105-9f17-c31c1e891e6a"   # Set the clientID of the user-assigned managed identity to use
+    keyvaultName: kv-aks-d01                                         # Set to the name of your key vault
+    objects:  |
+      array:
+        - |
+          objectName: ConnectionString
+          objectType: secret                            # secret, key or cert
+          objectVersion: ""
+    tenantId: "b40a105f-0643-4922-8e60-10fc1abf9c4b"                # The tenant ID of the key vault

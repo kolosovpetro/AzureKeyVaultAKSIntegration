@@ -12,3 +12,6 @@ and this project adheres to [Semantic Versioning v2.0.0](https://semver.org/spec
 - Provision AKS cluster terraform
 - Provision KeyVault and test secrets terraform
 - Configure RBAC access to keyvault in terraform
+- Enable keyvault addon in AKS
+- Configure csi provider class for keyvault
+- Create a pod with mounts pointing to secrets
