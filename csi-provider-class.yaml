@@ -1,8 +1,3 @@
-# This is a SecretProviderClass example using user-assigned identity to access your key vault
-# Service Connector sets up the Azure resource connection, users only need create the SecretProviderClass and workload resources
-# For the variables to fill in, you may get their values from Service Connector Azure Portal
-
-
 apiVersion: secrets-store.csi.x-k8s.io/v1
 kind: SecretProviderClass
 metadata:
@@ -10,6 +5,12 @@ metadata:
   namespace: default
 spec:
   provider: azure
+  secretObjects:
+    - secretName: kv-synced-secret
+      type: Opaque
+      data:
+        - objectName: ConnectionString
+          key: CONNECTION_STRING
   parameters:
     cloudName: AzurePublicCloud
     usePodIdentity: "false"

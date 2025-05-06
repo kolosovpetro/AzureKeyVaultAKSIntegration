@@ -61,7 +61,7 @@ resource "azurerm_role_assignment" "azure_portal_rbac" {
 
 resource "azurerm_key_vault_secret" "connection_string" {
   name         = "ConnectionString"
-  value        = "User ID=root;Password=myPassword;Host=localhost;Port=5432;Database=myDataBase;Pooling=true;Min Pool Size=0;Max Pool Size=100;Connection Lifetime=0;"
+  value        = "User ID=root;Password=myPassword228;Host=localhost;Port=5432;Database=myDataBase;Pooling=true;Min Pool Size=0;Max Pool Size=100;Connection Lifetime=0;"
   key_vault_id = azurerm_key_vault.public.id
 
   depends_on = [

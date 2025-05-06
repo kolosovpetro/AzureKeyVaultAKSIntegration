@@ -1,6 +1,4 @@
-﻿# This is a sample pod definition for using SecretProviderClass and the user-assigned identity to access your key vault
-
-kind: Pod
+﻿kind: Pod
 apiVersion: v1
 metadata:
   name: sc-demo-keyvault-csi
@@ -8,6 +6,12 @@ spec:
   containers:
     - name: busybox
       image: registry.k8s.io/e2e-test-images/busybox:1.29-4
+      env:
+        - name: APP_CONNECTION_STRING
+          valueFrom:
+            secretKeyRef:
+              name: kv-synced-secret
+              key: CONNECTION_STRING
       command:
         - "/bin/sleep"
         - "10000"
