@@ -14,6 +14,7 @@ kubectl apply -f .\csi-provider-class.yaml
 # Create pod with volume mount
 
 kubectl apply -f .\pod.yaml
+kubectl delete pod "sc-demo-keyvault-csi" -n default
 kubectl apply -f .\deployment.yaml
 
 # List secrets
