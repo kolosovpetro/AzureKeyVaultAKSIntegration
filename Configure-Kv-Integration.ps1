@@ -14,8 +14,10 @@ kubectl apply -f .\csi-provider-class.yaml
 # Create pod with volume mount
 
 kubectl apply -f .\pod.yaml
+kubectl apply -f .\deployment.yaml
 
 # List secrets
 
 kubectl exec sc-demo-keyvault-csi -- ls /mnt/secrets-store
 kubectl exec sc-demo-keyvault-csi -- cat /mnt/secrets-store/ConnectionString
+kubectl exec sc-demo-keyvault-csi -- printenv

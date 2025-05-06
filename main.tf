@@ -11,17 +11,43 @@ resource "azurerm_resource_group" "public" {
 # AKS
 ##########################################################################
 
-module "aks" {
-  source                      = "github.com/kolosovpetro/AzureAKSTerraform.git//modules/aks?ref=AZ400-325"
-  aks_name                    = "aks-${var.prefix}"
-  default_node_pool_type      = "VirtualMachineScaleSets"
-  default_node_pool_vm_size   = "Standard_DS2_v2"
-  kubernetes_version          = "1.31.2"
-  resource_group_location     = azurerm_resource_group.public.location
-  resource_group_name         = azurerm_resource_group.public.name
-  system_node_count           = 3
-  should_deploy_log_analytics = false
+resource "azurerm_kubernetes_cluster" "aks" {
+  name                = "aks-${var.prefix}"
+  kubernetes_version  = "1.31.2"
+  location            = azurerm_resource_group.public.location
+  resource_group_name = azurerm_resource_group.public.name
+  dns_prefix          = "aks-${var.prefix}"
+
+  default_node_pool {
+    name                        = "systempool"
+    node_count                  = 3
+    vm_size                     = "Standard_DS2_v2"
+    type                        = "VirtualMachineScaleSets"
+    temporary_name_for_rotation = "rotationpool"
+
+    upgrade_settings {
+      drain_timeout_in_minutes      = 0
+      max_surge                     = "10%"
+      node_soak_duration_in_minutes = 0
+    }
+  }
+
+  identity {
+    type = "SystemAssigned"
+  }
+
+  network_profile {
+    network_plugin = "azure"
+    network_policy = "azure"
+  }
+
+  lifecycle {
+    ignore_changes = [
+      key_vault_secrets_provider
+    ]
+  }
 }
+
 
 ##########################################################################
 # KEYVAULT
@@ -61,7 +87,7 @@ resource "azurerm_role_assignment" "azure_portal_rbac" {
 
 resource "azurerm_key_vault_secret" "connection_string" {
   name         = "ConnectionString"
-  value        = "User ID=root;Password=myPassword228;Host=localhost;Port=5432;Database=myDataBase;Pooling=true;Min Pool Size=0;Max Pool Size=100;Connection Lifetime=0;"
+  value        = "User ID=root;Password=myPassword;Host=localhost;Port=5432;Database=myDataBase;Pooling=true;Min Pool Size=0;Max Pool Size=100;Connection Lifetime=0;"
   key_vault_id = azurerm_key_vault.public.id
 
   depends_on = [

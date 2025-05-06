@@ -15,7 +15,7 @@ spec:
     cloudName: AzurePublicCloud
     usePodIdentity: "false"
     useVMManagedIdentity: "true"                                     # Set to true for using managed identity
-    userAssignedIdentityID: "a754b4a0-d934-4105-9f17-c31c1e891e6a"   # Set the clientID of the user-assigned managed identity to use
+    userAssignedIdentityID: "118334dc-b3d4-4e37-a22b-bd3f9e474fa2"   # Set the clientID of the user-assigned managed identity to use
     keyvaultName: kv-aks-d01                                         # Set to the name of your key vault
     objects:  |
       array:
