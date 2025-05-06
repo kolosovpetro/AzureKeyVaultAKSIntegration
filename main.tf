@@ -17,6 +17,7 @@ resource "azurerm_kubernetes_cluster" "aks" {
   location            = azurerm_resource_group.public.location
   resource_group_name = azurerm_resource_group.public.name
   dns_prefix          = "aks-${var.prefix}"
+  node_resource_group = "rg-node-aks-${var.prefix}"
 
   default_node_pool {
     name                        = "systempool"
@@ -91,7 +92,21 @@ resource "azurerm_key_vault_secret" "connection_string" {
   key_vault_id = azurerm_key_vault.public.id
 
   depends_on = [
-    azurerm_role_assignment.cli_rbac,
-    azurerm_role_assignment.azure_portal_rbac
+    azurerm_role_assignment.cli_rbac
   ]
+}
+
+resource "null_resource" "enable_keyvault_addon" {
+  provisioner "local-exec" {
+    command     = "az aks enable-addons --addons azure-keyvault-secrets-provider --name ${azurerm_kubernetes_cluster.aks.name} --resource-group ${azurerm_resource_group.public.name}"
+    interpreter = ["pwsh", "-Command"]
+  }
+}
+
+
+data "azurerm_user_assigned_identity" "kv_uami" {
+  name                = "azurekeyvaultsecretsprovider-${azurerm_kubernetes_cluster.aks.name}"
+  resource_group_name = azurerm_kubernetes_cluster.aks.node_resource_group
+
+  depends_on = [null_resource.enable_keyvault_addon]
 }
