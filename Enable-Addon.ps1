@@ -13,7 +13,6 @@
     return $output
 }
 
-$env:TF_LOG = "WARN"
 # $ErrorActionPreference = "Stop" # optional
 
 try
