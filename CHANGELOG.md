@@ -9,13 +9,13 @@ and this project adheres to [Semantic Versioning v2.0.0](https://semver.org/spec
 
 ### Changed
 
-- Update gitignore
-- Commit lock file
-- Move variable from locals
-- Git ignore txt files
-- Git ignore ssh keys
-- Update GitHub actions CI
-- Fix encoding and BOM characters
-- Azure pipelines for terraform
-- Add editorconfig
-- Remove example sas token
+- Provision AKS cluster terraform
+- Provision KeyVault and test secrets terraform
+- Configure RBAC access to keyvault in terraform
+- Enable keyvault addon in AKS
+- Configure csi provider class for keyvault
+- Create a pod with mounts pointing to secrets
+- Create a pod that loads secrets to environment
+- Add enable addon script
+- Add helm chart for CSI keyvault driver
+- Deploy helm chart script

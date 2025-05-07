@@ -1,0 +1,36 @@
+﻿apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app-using-kv-secrets
+  labels:
+    app: kv-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: kv-app
+  template:
+    metadata:
+      labels:
+        app: kv-app
+    spec:
+      containers:
+        - name: my-app
+          image: nginx # Replace with your actual app image
+          env:
+            - name: APP_CONNECTION_STRING
+              valueFrom:
+                secretKeyRef:
+                  name: kv-synced-secret
+                  key: CONNECTION_STRING
+          volumeMounts:
+            - name: secrets-store
+              mountPath: /mnt/secrets-store
+              readOnly: true
+      volumes:
+        - name: secrets-store
+          csi:
+            driver: secrets-store.csi.k8s.io
+            readOnly: true
+            volumeAttributes:
+              secretProviderClass: "sc-demo-keyvault-csi"

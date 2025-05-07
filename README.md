@@ -1,102 +1,57 @@
-# Terraform template
+# 🔐 AKS Key Vault CSI Integration (Terraform + Helm)
 
-Terraform template for modules and submodules.
-Includes pre-commit hooks that lint the terraform code and generate module's
-documentation as part of README file.
-Contains examples of terraform CI/CD pipelines for GitHub Actions and Azure Pipelines.
+This project provisions an **Azure Kubernetes Service (AKS)** cluster and integrates
+it with **Azure Key Vault** using the **CSI Secrets Store driver**. It uses **Terraform**
+for infrastructure provisioning and **Helm** for Kubernetes resource management.
 
-## Terraform Init
+---
 
-- Create and configure Azure Storage Account for Terraform state
-- Create `azure.sas.conf` file with the following content:
-    ```bash
-    storage_account_name = "storage_account_name"
-    container_name       = "container_name"
-    key                  = "terraform.tfstate"
-    sas_token            = "sas_token"
-    ```
-- `terraform init -backend-config="azure.sas.conf" -reconfigure -upgrade`
+## 🚀 Setup
 
-## Module referencing
+- Provision AKS cluster using Terraform
+- Create and configure an Azure Key Vault with secrets using Terraform
+- Enable the `azure-keyvault-secrets-provider` addon in AKS using Azure CLI
+- Assign RBAC permissions to managed identities for accessing Key Vault using Azure CLI
+- Deploy CSI `SecretProviderClass` using HELM
+- Deploy a pod that mounts secrets as volumes
+- Deploy a pod that exposes secrets via environment variables
+- Scripts for:
+    - Enabling CSI addon
+    - Managing role assignments
+    - Deploying Helm chart
 
-- Bitbucket: `git::git@bitbucket.org:kolosovpetro/terraform.git//modules/storage`
-- Github: `git::git@github.com:kolosovpetro/terraform.git//modules/storage`
+---
 
-## Pre-commit configuration
+## 🔧 Ongoing work
 
-- Install python3 via Windows Store
-- `pip install --upgrade pip`
-- `pip install pre-commit`
-- Update PATH variable
-- `pre-commit install`
+- Implementation of the complete secrets rotation solution in AKS
 
-### Install terraform docs
+---
 
-- `choco install terraform-docs`
+## 🧰 Prerequisites
 
-### Install tflint
+- [Terraform CLI](https://developer.hashicorp.com/terraform/downloads)
+- [Azure CLI](https://learn.microsoft.com/en-us/cli/azure/install-azure-cli)
+- [kubectl](https://kubernetes.io/docs/tasks/tools/)
+- [Helm](https://helm.sh/docs/intro/install/)
+- [PowerShell Core (pwsh)](https://learn.microsoft.com/en-us/powershell/scripting/install/installing-powershell)
 
-- `choco install tflint`
+---
 
-### Documentation
+## 🧪 Helm Chart Validation & Linting
 
-- https://github.com/antonbabenko/pre-commit-terraform
-- https://github.com/kolosovpetro/AzureTerraformBackend
-- https://github.com/terraform-docs/terraform-docs
-- https://terraform-docs.io/user-guide/installation/
-- https://pre-commit.com/
+To validate your Helm templates before deployment:
 
-## Storage account configuration file
+```bash
+helm lint ./charts/keyvault-csi
+helm template --debug ./charts/keyvault-csi
+```
 
-  ```bash
-  storage_account_name = "storage_account_name"
-  container_name       = "container_name"
-  key                  = "terraform.tfstate"
-  sas_token            = "sas_token"
-  ```
+---
 
-## Deploy storage account for terraform state
+## Terraform Modules used
 
-- See [CreateAzureStorageAccount.ps1](./CreateAzureStorageAccount.ps1)
-
-# Module documentation
-
-<!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
-
-## Requirements
-
-| Name                                                                | Version |
-|---------------------------------------------------------------------|---------|
-| <a name="requirement_azurerm"></a> [azurerm](#requirement\_azurerm) | =3.71.0 |
-
-## Providers
-
-| Name                                                          | Version |
-|---------------------------------------------------------------|---------|
-| <a name="provider_azurerm"></a> [azurerm](#provider\_azurerm) | 3.71.0  |
-
-## Modules
-
-| Name                                                                             | Source                      | Version |
-|----------------------------------------------------------------------------------|-----------------------------|---------|
-| <a name="module_resource_group"></a> [resource\_group](#module\_resource\_group) | ./modules/example_submodule | n/a     |
-
-## Resources
-
-| Name                                                                                                                              | Type        |
-|-----------------------------------------------------------------------------------------------------------------------------------|-------------|
-| [azurerm_resource_group.public](https://registry.terraform.io/providers/hashicorp/azurerm/3.71.0/docs/resources/resource_group)   | resource    |
-| [azurerm_client_config.current](https://registry.terraform.io/providers/hashicorp/azurerm/3.71.0/docs/data-sources/client_config) | data source |
-
-## Inputs
-
-| Name                                                                                                        | Description              | Type     | Default | Required |
-|-------------------------------------------------------------------------------------------------------------|--------------------------|----------|---------|:--------:|
-| <a name="input_prefix"></a> [prefix](#input\_prefix)                                                        | Prefix for all resources | `string` | n/a     |   yes    |
-| <a name="input_resource_group_location"></a> [resource\_group\_location](#input\_resource\_group\_location) | Resource group location  | `string` | n/a     |   yes    |
-| <a name="input_resource_group_name"></a> [resource\_group\_name](#input\_resource\_group\_name)             | Resource group name      | `string` | n/a     |   yes    |
-
-## Outputs
-
-No outputs.
-<!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
+- https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/kubernetes_cluster
+- https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/role_assignment
+- https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/key_vault
+- https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/key_vault_secret

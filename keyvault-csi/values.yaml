@@ -1,0 +1,17 @@
+name: sc-demo-keyvault-csi
+namespace: default
+
+cloudName: AzurePublicCloud
+usePodIdentity: "false"
+useVMManagedIdentity: "true"
+userAssignedIdentityID: "1cf989d0-0e8d-4fa5-966f-a68413859fde"
+keyvaultName: kv-aks-d01
+tenantId: "b40a105f-0643-4922-8e60-10fc1abf9c4b"
+
+secretObject:
+  name: kv-synced-secret
+  type: Opaque
+  data:
+    objectName: ConnectionString
+    key: CONNECTION_STRING
+    objectType: secret
