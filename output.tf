@@ -14,6 +14,10 @@ output "node_resource_group" {
   value = azurerm_kubernetes_cluster.aks.node_resource_group
 }
 
-output "key_vault_uami_client_id" {
-  value = data.azurerm_user_assigned_identity.kv_uami.client_id
+output "resource_group_name" {
+  value = azurerm_resource_group.public.name
+}
+
+output "aks_name" {
+  value = azurerm_kubernetes_cluster.aks.name
 }

@@ -95,18 +95,3 @@ resource "azurerm_key_vault_secret" "connection_string" {
     azurerm_role_assignment.cli_rbac
   ]
 }
-
-resource "null_resource" "enable_keyvault_addon" {
-  provisioner "local-exec" {
-    command     = "az aks enable-addons --addons azure-keyvault-secrets-provider --name ${azurerm_kubernetes_cluster.aks.name} --resource-group ${azurerm_resource_group.public.name}"
-    interpreter = ["pwsh", "-Command"]
-  }
-}
-
-
-data "azurerm_user_assigned_identity" "kv_uami" {
-  name                = "azurekeyvaultsecretsprovider-${azurerm_kubernetes_cluster.aks.name}"
-  resource_group_name = azurerm_kubernetes_cluster.aks.node_resource_group
-
-  depends_on = [null_resource.enable_keyvault_addon]
-}
