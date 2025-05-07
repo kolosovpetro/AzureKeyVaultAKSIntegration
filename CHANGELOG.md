@@ -15,4 +15,5 @@ and this project adheres to [Semantic Versioning v2.0.0](https://semver.org/spec
 - Enable keyvault addon in AKS
 - Configure csi provider class for keyvault
 - Create a pod with mounts pointing to secrets
-- Add local exec provisioner for AKS keyvault addon
+- Create a pod that loads secrets to environment
+- Add enable addon script
