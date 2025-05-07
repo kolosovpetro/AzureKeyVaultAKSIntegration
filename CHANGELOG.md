@@ -17,3 +17,4 @@ and this project adheres to [Semantic Versioning v2.0.0](https://semver.org/spec
 - Create a pod with mounts pointing to secrets
 - Create a pod that loads secrets to environment
 - Add enable addon script
+- Add helm chart for CSI keyvault driver
